@@ -1,0 +1,71 @@
+﻿@page "/koreseddel"
+@using BlazorCalendar.Models
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Køreseddel</PageTitle>
+
+<EditForm Model="@koreseddelModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="bruger">Bruger:</label>
+        <InputText id="bruger" @bind-Value="koreseddelModel.Bruger" class="form-control" />
+    </div>
+    <div>
+        <label for="formal">Formål:</label>
+        <InputText id="formal" @bind-Value="koreseddelModel.Formal" class="form-control" />
+    </div>
+    <div>
+        <label for="startDato">Startdato:</label>
+        <InputDate id="startDato" @bind-Value="koreseddelModel.StartDato" class="form-control" />
+    </div>
+    <div>
+        <label for="slutDato">Slutdato:</label>
+        <InputDate id="slutDato" @bind-Value="koreseddelModel.SlutDato" class="form-control" />
+    </div>
+    <div>
+        <label for="kmStart">Km start:</label>
+        <InputNumber id="kmStart" @bind-Value="koreseddelModel.KmStart" class="form-control" />
+    </div>
+    <div>
+        <label for="kmSlut">Km slut:</label>
+        <InputNumber id="kmSlut" @bind-Value="koreseddelModel.KmSlut" class="form-control" />
+    </div>
+    <div>
+        <label for="fraDestination">Fra destination:</label>
+        <InputText id="fraDestination" @bind-Value="koreseddelModel.FraDestination" class="form-control" />
+    </div>
+    <div>
+        <label for="tilDestination">Til destination:</label>
+        <InputText id="tilDestination" @bind-Value="koreseddelModel.TilDestination" class="form-control" />
+    </div>
+    <div>
+        <label for="bilId">Bil model og nr plade:</label>
+        <InputText id="bilId" @bind-Value="koreseddelModel.BilId" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Indsend</button>
+</EditForm>
+
+@code {
+    private KoreseddelModel koreseddelModel = new KoreseddelModel();
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine("Form submitted!");
+        var response = await Http.PostAsJsonAsync("https://localhost:7091/api/car/cars", koreseddelModel);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/annualyview");
+        }
+        else
+        {
+            // Handle error response
+            Console.WriteLine("Error submitting form");
+        }
+    }
+}

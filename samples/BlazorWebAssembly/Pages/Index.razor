@@ -1,0 +1,36 @@
+﻿@page "/"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using BlazorCalendar.Models
+@inject HttpClient Http
+
+<PageTitle>Køreseddel</PageTitle>
+
+<h3>Køreseddel</h3>
+
+<p>This is a calendar for Cars</p>
+
+<ul>
+    @if (koreseddelList != null)
+    {
+        foreach (var koreseddel in koreseddelList)
+        {
+            <li>@koreseddel.: @koreseddel.Formal fra @koreseddel.FraDestination til @koreseddel.TilDestination</li>
+        }
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+</ul>
+
+@code {
+    private List<BlazorCalendar.Models.KoreseddelModel> koreseddelList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        koreseddelList = await Http.GetFromJsonAsync<List<BlazorCalendar.Models.KoreseddelModel>>("https://localhost:7091/api/car");
+    }
+}
